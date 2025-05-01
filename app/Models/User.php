@@ -9,8 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use App\Notifications\VerifyEmailNotification;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
     use  HasFactory, Notifiable, MustVerifyEmailTrait;
 
@@ -54,5 +55,25 @@ class User extends Authenticatable implements MustVerifyEmail
     public function videos()
     {
         return $this->hasMany(Video::class);
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
