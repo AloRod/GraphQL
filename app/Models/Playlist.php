@@ -22,6 +22,11 @@ class Playlist extends Model
     {
         return $this->belongsToMany(Video::class, 'playlist_video', 'playlist_id', 'video_id');
     }
+    // Relación con Perfiles (Usuarios Restringidos)
+    public function profiles()
+    {
+        return $this->belongsToMany(RestrictedUser::class, 'playlist_restricted_user', 'playlist_id', 'restricted_user_id');
+    }
     
 }
 

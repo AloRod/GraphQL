@@ -22,10 +22,11 @@ class RestrictedUser extends Model
 
     public function getAvatarUrlAttribute()
 {
-    if ($this->avatar) {
-        return asset('storage/' . $this->avatar);
-    }
-    return null;
+    $backend = config('app.backend_url');
+        if ($this->avatar) {
+            return $backend . 'storage/' . $this->avatar;
+        }
+        return null;
 }
     /**
      * Get playlists where this restricted user is associated.
