@@ -15,8 +15,8 @@ class SearchVideos
             throw new \Exception('Unauthenticated user');
         }
 
-        $query = $args['query'];
-        $restrictedUserId = $args['restricted_user_id'] ?? null;
+        $query = $args['query']; //consulta para buscar los videos
+        $restrictedUserId = $args['restricted_user_id'] ?? null; //reestringe la cantidad de busquedas a lo que solo tenga permitido
 
 
         if ($restrictedUserId) {
@@ -28,7 +28,7 @@ class SearchVideos
                 throw new \Exception('Restricted user not found or not authorized');
             }
 
-            $accessiblePlaylistIds = DB::table('playlist_restricted_user')
+            $accessiblePlaylistIds = DB::table('playlist_restricted_user') //obtiene acceso a la tabla intermedia
                 ->where('restricted_user_id', $restrictedUserId)
                 ->pluck('playlist_id');
 
@@ -36,7 +36,7 @@ class SearchVideos
                 $q->where('name', 'like', "%{$query}%")
                     ->orWhere('description', 'like', "%{$query}%");
             })
-                ->whereHas('playlists', function ($query) use ($accessiblePlaylistIds) {
+                ->whereHas('playlists', function ($query) use ($accessiblePlaylistIds) { //filtrado de playlist a los que el usuario tiene acceso
                     $query->whereIn('playlists.id', $accessiblePlaylistIds);
                 })
                 ->get();
